@@ -1,0 +1,35 @@
+mkdir ~/.ssh/key_backup/
+cd ~/.ssh/key_backup/
+ssh-keygen -t rsa -C "solq360@gmail.com"
+ssh-add ~/.ssh/id_rsa
+sudo apt-get install xclip
+xclip -sel clip < ~/.ssh/id_rsa.pub
+
+cat ~/.ssh/id_rsa.pub
+复制信息到  xxx
+ssh -T git@github.com
+出现提示
+Hi solq! You've successfully authenticated, but GitHub does not provide shell access.
+
+
+上面配置好了，下面是创建发布
+
+  git config --global user.name "Your Name"
+  git config --global user.email solq360@gmail.com
+
+      
+  mkdir test
+  cd test
+  git init
+  touch README
+  git add README
+  git commit -m 'first commit'
+  git remote add origin git@github.com:solq/test.git
+  git push -u origin master
+      
+
+  cd existing_git_repo
+  git remote add origin git@github.com:solq/test.git
+  git push -u origin master
+      
+
