@@ -1,0 +1,95 @@
+
+create trigger t1 before update on test1
+for each row
+	begin
+	declare new int;
+
+	set @oldnum=OLD.num;
+	set new=NEW.num;
+	insert into test2(id,num) values(new,@oldnum);
+end
+
+
+
+drop trigger t1
+create trigger t1 before update on test1
+for each row
+	begin
+	declare new int;
+	set @oldnum=OLD.num;
+	set new=NEW.num;
+	if new>@oldnum then
+		insert into test2(id,num) values(new,@oldnum);
+	end if;
+end
+
+#drop trigger t1 #删除trigger
+#show triggers #查看所有触发器
+#SELECT   *   FROM   information_schema.TRIGGERS
+
+
+说明
+
+FOR EACH ROW子句通知MySQL触发器每隔一行执行一次动作，而不是对整下表执行一次。
+
+{BEFORE|AFTER}--触发器有执行的时间设置：可以设置为事件发生前或后
+
+{INSERT|UPDATE|DELETE}--同样也能设定触发的事件
+
+对于INSERT语句,只有NEW是合法的；对于DELETE语句，只有OLD才合法；而UPDATE语句可以在和NEW以及OLD同时使用。
+复合语句(BEGIN/END)是合法的.
+流控制(Flow-of-control)语句(IF,CASE,WHEN,LOOP,WHILE,REPEAT,LEAVE,ITERATE)也是合法的.
+变量声明(DECLARE)以及指派(SET)是合法的.
+
+允许条件声明.
+你必须拥有相当大的权限才能创建触发器(CREATE TRIGGER)。如果你已经是Root用户，那么就足够了。这跟SQL的标准有所不同，我也希望能尽快改成标准的。
+
+不能给同一个表的同一个操作创建两个不同的触发器。比如给同一个表 创建两个 update 事件是不允许的
+
+
+
+下面是 控制语法示例
+
+create procedure pro()
+begin
+	set @a= 4;
+	while @a<10 do
+		set @a=@a+1;
+	end while;
+	select @a;
+end
+
+
+create procedure pro()
+begin
+	set @a=1;
+	go: loop
+		if @a<6 then			
+			set @a=@a+1;
+			iterate go;
+		end if;
+		leave go;
+	end loop go;
+	select @a;
+end
+
+#leave 退出循环 iterate 继续迭代
+
+call pro();#调用存储过程
+drop procedure pro; ＃删除存储过程
+
+
+查询数据库中的存储过程 
+
+方法一：
+       select `name` from mysql.proc where db = 'your_db_name' and `type` = 'PROCEDURE' 
+
+方法二：
+
+         show procedure status; 
+
+查看存储过程或函数的创建代码
+
+show create procedure proc_name;
+show create function func_name;
+
